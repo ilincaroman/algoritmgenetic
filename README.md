@@ -1,0 +1,2 @@
+# algoritmgenetic
+Tema la IA
