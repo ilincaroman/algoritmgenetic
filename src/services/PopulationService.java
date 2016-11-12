@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PopulationService {
-	public List<List<Integer>> population = new ArrayList<List<Integer>>();
+	private List<List<Integer>> population = new ArrayList<>();
 
 	public List<Integer> generateKey() {
-		List<Integer> candidateKey = new ArrayList<Integer>();
+		List<Integer> candidateKey = new ArrayList<>();
 
 		int quota = 0;
 		while (quota != 26) {
@@ -44,7 +44,7 @@ public class PopulationService {
 		return population;
 	}
 
-	public static int randInt(int min, int max) {
+	private int randInt(int min, int max) {
 		return min + (int) (Math.random() * (max - min + 1));
 	}
 }
