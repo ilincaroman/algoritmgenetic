@@ -8,8 +8,8 @@ import java.util.Vector;
 
 public class EncryptionService {
 	private String text;
-	protected Vector<String> dictionary = new Vector<String>();
-	protected Vector<Integer> encryptionKey = new Vector<Integer>();
+	protected Vector<String> dictionary = new Vector<>();
+	protected Vector<Integer> encryptionKey = new Vector<>();
 
 	public void generateKey() {
 		int quota = 0;
@@ -106,7 +106,7 @@ public class EncryptionService {
 		this.text = text;
 	}
 
-	public static int randInt(int min, int max) {
+	private int randInt(int min, int max) {
 		return min + (int) (Math.random() * (max - min + 1));
 	}
 }
