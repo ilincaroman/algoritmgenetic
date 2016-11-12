@@ -4,12 +4,23 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import java.util.Vector;
 
 public class EncryptionService {
 	private String text;
 	protected Vector<String> dictionary = new Vector<String>();
+	protected Vector<Integer> encryptionKey = new Vector<Integer>();
+
+	public void generateKey() {
+		int quota = 0;
+		while (quota != 26) {
+			int positionShift = randInt(0, 25);
+			if (encryptionKey.contains(positionShift) == false) {
+				encryptionKey.add(positionShift);
+				quota++;
+			}
+		}
+	}
 
 	// citeste dintr-un txt si iti genereaza o lista de cuvinte care reprezinta
 	// dictionaru, also, salveaza in "text" textul citit
@@ -45,44 +56,46 @@ public class EncryptionService {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(everything);
 
-		// curata textul de semne de punctuatie
-		everything = everything.replace(",", "");
-		everything = everything.replace(".", "");
-		everything = everything.replace("-", "");
-		everything = everything.replace("’", "");
-		everything = everything.replace("(", "");
-		everything = everything.replace(")", "");
-		everything = everything.replace("\"", "");
-		everything = everything.toLowerCase();
-
-		text = everything;
+		setText(cleanString(everything));
 
 		String[] parts = everything.split(" ");
 		for (int i = 0; i < parts.length; i++) {
-			// System.out.println(parts[i]);
 			if (dictionary.contains(parts[i].toString()) == false) {
 				dictionary.add(parts[i].toString());
 			}
-			// String element = parts[i];
-			// dictionary.addElement(element);
+		}
+	}
 
-		}
-		for (int i = 0; i < dictionary.size(); i++) {
-			System.out.println(dictionary.get(i));
-		}
+	// curata textul de semne de punctuatie inafara de puncte
+	public String cleanString(String toClean) {
+		toClean = toClean.replace(",", "");
+		toClean = toClean.replace("-", "");
+		toClean = toClean.replace("’", "");
+		toClean = toClean.replace("(", "");
+		toClean = toClean.replace(")", "");
+		toClean = toClean.replace("\"", "");
+		toClean = toClean.toLowerCase();
+		return toClean;
 	}
 
 	// din toate propozitiile textului alege una
-	public String extractSentence(String text) {
-		return null;
+	public String extractSentence() {
+		String[] sentences = text.split("\\.");
+		return sentences[randInt(0, sentences.length - 1)];
 	}
 
-	// criptare, returneaza o ista de int-uri (corespunzatoare pt fiecare litera
+	// criptare, returneaza o lista de int-uri (corespunzatoare pt fiecare
+	// litera
 	// din alfabet)
-	public List<Integer> encryptSentence(String sentence) {
-		return null;
+
+	// pare rau, la criptare se returneaza un string criptat
+	public String encryptSentence(String sentence) {
+		String encryptedSentence = sentence.replace(" ", "");
+		for (int i = 0; i < encryptionKey.size(); i++) {
+			encryptedSentence = encryptedSentence.replace((char) (i + 'a'), (char) (encryptionKey.get(i) + 'a'));
+		}
+		return encryptedSentence;
 	}
 
 	public String getText() {
@@ -91,5 +104,9 @@ public class EncryptionService {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public static int randInt(int min, int max) {
+		return min + (int) (Math.random() * (max - min + 1));
 	}
 }
