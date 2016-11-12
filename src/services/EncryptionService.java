@@ -5,10 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 public class EncryptionService {
 	private String text;
-	private List<String> dictionary;
+	protected Vector<String> dictionary = new Vector<String>();
 
 	// citeste dintr-un txt si iti genereaza o lista de cuvinte care reprezinta
 	// dictionaru, also, salveaza in "text" textul citit
@@ -54,13 +55,22 @@ public class EncryptionService {
 		everything = everything.replace("(", "");
 		everything = everything.replace(")", "");
 		everything = everything.replace("\"", "");
+		everything = everything.toLowerCase();
+
+		text = everything;
 
 		String[] parts = everything.split(" ");
 		for (int i = 0; i < parts.length; i++) {
-			System.out.println(parts[i]);
-			String element = parts[i];
-			dictionary.add(element);
+			// System.out.println(parts[i]);
+			if (dictionary.contains(parts[i].toString()) == false) {
+				dictionary.add(parts[i].toString());
+			}
+			// String element = parts[i];
+			// dictionary.addElement(element);
 
+		}
+		for (int i = 0; i < dictionary.size(); i++) {
+			System.out.println(dictionary.get(i));
 		}
 	}
 
