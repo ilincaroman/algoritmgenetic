@@ -8,7 +8,7 @@ import java.util.Vector;
 
 public class EncryptionService {
 	private String text;
-	protected Vector<String> dictionary = new Vector<String>();
+	public Vector<String> dictionary = new Vector<String>();
 	protected Vector<Integer> encryptionKey = new Vector<Integer>();
 
 	public void generateKey() {
@@ -32,7 +32,6 @@ public class EncryptionService {
 		try {
 			br = new BufferedReader(new FileReader("text.txt"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
@@ -46,13 +45,11 @@ public class EncryptionService {
 			}
 			everything = sb.toString();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
 				br.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -67,18 +64,6 @@ public class EncryptionService {
 		}
 	}
 
-	// curata textul de semne de punctuatie inafara de puncte
-	public String cleanString(String toClean) {
-		toClean = toClean.replace(",", "");
-		toClean = toClean.replace("-", "");
-		toClean = toClean.replace("’", "");
-		toClean = toClean.replace("(", "");
-		toClean = toClean.replace(")", "");
-		toClean = toClean.replace("\"", "");
-		toClean = toClean.toLowerCase();
-		return toClean;
-	}
-
 	// din toate propozitiile textului alege una
 	public String extractSentence() {
 		String[] sentences = text.split("\\.");
@@ -90,6 +75,7 @@ public class EncryptionService {
 	// din alfabet)
 
 	// pare rau, la criptare se returneaza un string criptat
+
 	public String encryptSentence(String sentence) {
 		String encryptedSentence = sentence.replace(" ", "");
 		for (int i = 0; i < encryptionKey.size(); i++) {
@@ -108,5 +94,17 @@ public class EncryptionService {
 
 	public static int randInt(int min, int max) {
 		return min + (int) (Math.random() * (max - min + 1));
+	}
+
+	// curata textul de semne de punctuatie inafara de puncte
+	public String cleanString(String toClean) {
+		toClean = toClean.replace(",", "");
+		toClean = toClean.replace("-", "");
+		toClean = toClean.replace("’", "");
+		toClean = toClean.replace("(", "");
+		toClean = toClean.replace(")", "");
+		toClean = toClean.replace("\"", "");
+		toClean = toClean.toLowerCase();
+		return toClean;
 	}
 }

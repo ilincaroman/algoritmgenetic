@@ -13,5 +13,15 @@ public class GeneticAlgorithm {
 
 		PopulationService PS = new PopulationService();
 		PS.generateFirstPopulation();
+
+		FitnessService FS = new FitnessService();
+		for (int i = 0; i < PS.population.size(); i++) {
+			FS.evaluateFitness(ES.dictionary, Encrypted, PS.population.get(i));
+		}
+		FS.sortPopulationByFitness();
+		// FS.printOrdered();
+		// System.out.println("MAXIM AM ZIS" + FS.getMaxFit());
+		// FS.normalizeFit();
+		FS.printOrdered();
 	}
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PopulationService {
-	private List<List<Integer>> population = new ArrayList<List<Integer>>();
+	public List<List<Integer>> population = new ArrayList<List<Integer>>();
 
 	public List<Integer> generateKey() {
 		List<Integer> candidateKey = new ArrayList<Integer>();
