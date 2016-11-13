@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 
 public class EncryptionService {
@@ -84,6 +85,14 @@ public class EncryptionService {
 		}
 		textSize = encryptedSentence.length();
 		return encryptedSentence;
+	}
+
+	public String decryptSentence(String sentence, List<Integer> key) {
+		String decryptedSentence = sentence.replace(" ", "");
+		for (int i = 0; i < key.size(); i++) {
+			decryptedSentence = decryptedSentence.replace((char) (i + 'a'), (char) (encryptionKey.get(i) + 'a'));
+		}
+		return decryptedSentence;
 	}
 
 	public String getText() {
