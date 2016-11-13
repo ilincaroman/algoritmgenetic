@@ -90,7 +90,8 @@ public class EncryptionService {
 	public String decryptSentence(String sentence, List<Integer> key) {
 		String decryptedSentence = sentence.replace(" ", "");
 		for (int i = 0; i < key.size(); i++) {
-			decryptedSentence = decryptedSentence.replace((char) (i + 'a'), (char) (encryptionKey.get(i) + 'a'));
+			decryptedSentence = decryptedSentence.replace((char) (i + 'a'),
+					(char) (key.indexOf((char) (i + 'a')) + 'a'));
 		}
 		return decryptedSentence;
 	}
