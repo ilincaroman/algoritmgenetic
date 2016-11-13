@@ -3,38 +3,43 @@ package services;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Candidate;
+
 public class GeneticOperatorService {
 
-	public List<Integer> mutate(List<Integer> subject) {
+	public Candidate mutate(Candidate subject) {
 		int firstPosition = randInt(0, 25);
 		int secondPosition = randInt(0, 25);
 
 		if (firstPosition == secondPosition) {
-			secondPosition++;
+			if (firstPosition == 25) {
+				secondPosition = firstPosition - 1;
+			} else {
+				secondPosition = firstPosition + 1;
+			}
 		}
 
-		int aux = subject.get(firstPosition);
-		subject.set(firstPosition, subject.get(secondPosition));
-		subject.set(secondPosition, aux);
+		List<Integer> key = subject.getKey();
+		int aux = key.get(firstPosition);
+		key.set(firstPosition, key.get(secondPosition));
+		key.set(secondPosition, aux);
 
 		return subject;
 	}
 
-	public List<List<Integer>> crossOver(List<List<Integer>> parents) {
-		List<Integer> firstParent = parents.get(0);
-		List<Integer> secondParent = parents.get(1);
+	public List<Candidate> crossOver(List<Candidate> parents) {
+		List<Integer> firstParent = parents.get(0).getKey();
+		List<Integer> secondParent = parents.get(1).getKey();
 
 		int crossPoint = randInt(1, 24);
 
 		List<Integer> firstChild = basicCrossOver(firstParent, secondParent, crossPoint);
 		List<Integer> secondChild = basicCrossOver(secondParent, firstParent, crossPoint);
 
-		List<List<Integer>> results = solveConflicts(firstChild, secondChild);
-
-		return results;
+		return solveConflicts(firstChild, secondChild);
 	}
 
-	private List<List<Integer>> solveConflicts(List<Integer> firstChild, List<Integer> secondChild) {
+	private List<Candidate> solveConflicts(List<Integer> firstChild, List<Integer> secondChild) {
 		List<Integer> firstChildDoubles = getDoubleApparitionElements(firstChild);
 		List<Integer> secondChildDoubles = getDoubleApparitionElements(secondChild);
 
@@ -48,9 +53,9 @@ public class GeneticOperatorService {
 			secondChildDoubles.remove(associateIndex);
 		}
 
-		List<List<Integer>> results = new ArrayList<>();
-		results.add(firstChild);
-		results.add(secondChild);
+		List<Candidate> results = new ArrayList<>();
+		results.add(new Candidate(firstChild));
+		results.add(new Candidate(secondChild));
 
 		return results;
 	}
