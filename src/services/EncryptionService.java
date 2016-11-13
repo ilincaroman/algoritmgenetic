@@ -96,6 +96,13 @@ public class EncryptionService {
 		return decryptedSentence;
 	}
 
+	public Boolean checkValidity(String check, String sentence, List<Integer> key) {
+		if (check == decryptSentence(sentence, key)) {
+			return true;
+		}
+		return false;
+	}
+
 	public String getText() {
 		return text;
 	}

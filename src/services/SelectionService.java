@@ -2,6 +2,7 @@ package services;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import models.Candidate;
@@ -10,6 +11,10 @@ public class SelectionService {
 
 	public static final int COMPETITION_RANDOM_CHANCE = 80;
 
+	private static final GeneticOperatorService geneticOperatorService = new GeneticOperatorService();
+	private static final FitnessService fitnessService = new FitnessService();
+	private static final EncryptionService encryptionService = new EncryptionService();
+
 	public List<Candidate> makeSelectionForPopulation(List<Candidate> population) {
 		List<Candidate> newPop = new ArrayList<>();
 
@@ -17,9 +22,21 @@ public class SelectionService {
 			int popSelector = randInt(1, 2);
 
 			if (popSelector == 1) {
-				newPop.add(competition(population));
+				Candidate candidate = competition(population);
+				if (Collections.frequency(population, candidate) > 10) {
+					List<Candidate> parents = new ArrayList<>();
+					parents.add(population.get(randInt(0, population.size() - 1)));
+					parents.add(population.get(randInt(0, population.size() - 1)));
+					candidate = geneticOperatorService.crossOver(parents).get(0);
+					fitnessService.evaluateFitness(encryptionService.dictionary, GeneticAlgorithm.toDecrypt, candidate);
+				}
+				newPop.add(candidate);
 			} else {
-				newPop.add(fortuneWheel(population));
+				Candidate candidate = fortuneWheel(population);
+				if (Collections.frequency(population, candidate) > 10) {
+					candidate = competition(population);
+				}
+				newPop.add(candidate);
 			}
 		}
 		return newPop;
@@ -70,7 +87,7 @@ public class SelectionService {
 		}
 		// nu o sa ajunga niciodata aici, l-am pus doar pentru ca ma enerva
 		// eroarea
-		return population.get(0);
+		return population.get(population.size() - 1);
 	}
 
 	// public List<Candidate> fortuneWheel(List<Candidate> population) {

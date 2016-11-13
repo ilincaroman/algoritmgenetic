@@ -1,5 +1,8 @@
 package services;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,8 +10,9 @@ import java.util.List;
 import models.Candidate;
 
 public class GeneticAlgorithm {
+	public static String toDecrypt;
 
-	private static final int GENERATION_NUMBEr = 5000;
+	private static final int GENERATION_NUMBER = 1000;
 	private static final int CANDIDATES_TO_CROSSOVER = 70;
 	private static final int ELITISM_NUMBER = 3;
 
@@ -28,6 +32,7 @@ public class GeneticAlgorithm {
 		String toEncrypt = encryptionService.extractSentence();
 		System.out.println(toEncrypt);
 		String Encrypted = encryptionService.encryptSentence(toEncrypt);
+		toDecrypt = Encrypted;
 		System.out.println(Encrypted);
 
 		populationService.generateFirstPopulation();
@@ -38,7 +43,12 @@ public class GeneticAlgorithm {
 			fitnessService.evaluateFitness(encryptionService.dictionary, Encrypted, c);
 		}
 
-		while (generationNumber < GENERATION_NUMBEr) {
+		while (generationNumber < GENERATION_NUMBER) {
+			if (encryptionService.checkValidity(toEncrypt, Encrypted, currentPopulation.get(0).getKey())) {
+				System.out.println("FOUND!");
+				break;
+			}
+
 			System.out.println("Generation number: " + generationNumber);
 
 			fitnessService.normalizeFit(currentPopulation);
@@ -84,9 +94,9 @@ public class GeneticAlgorithm {
 			currentPopulation.clear();
 
 			fitnessService.sortPopulationByFitness(newPopulation);
-			// printPopulation(newPopulation);
+			printPopulation(newPopulation, generationNumber);
 
-			printCandidate(newPopulation.get(0));
+			// printCandidate(newPopulation.get(0));
 
 			currentPopulation = newPopulation;
 
@@ -94,19 +104,26 @@ public class GeneticAlgorithm {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private void printPopulation(List<Candidate> population) {
-		System.out.println();
-		for (Candidate c : population) {
-			System.out.print(
-					"Fitness: " + c.getFitness() + " normalized to: " + c.getNormalizedFitness() + " for subject ");
-			for (Integer i : c.getKey()) {
-				System.out.print(i + " ");
+	private void printPopulation(List<Candidate> population, int generationNumber) {
+		try (FileWriter fw = new FileWriter("outfilename", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				PrintWriter out = new PrintWriter(bw)) {
+
+			out.println("Generation number: " + generationNumber);
+			for (Candidate c : population) {
+				out.print(
+						"Fitness: " + c.getFitness() + " normalized to: " + c.getNormalizedFitness() + " for subject ");
+				for (Integer i : c.getKey()) {
+					out.print(i + " ");
+				}
+				out.println();
 			}
-			System.out.println();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void printCandidate(Candidate c) {
 		System.out.println(
 				"Fitness: " + c.getFitness() + " normalized to: " + c.getNormalizedFitness() + " for subject ");
