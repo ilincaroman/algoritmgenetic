@@ -8,8 +8,9 @@ import java.util.Vector;
 
 public class EncryptionService {
 	private String text;
-	public Vector<String> dictionary = new Vector<String>();
-	protected Vector<Integer> encryptionKey = new Vector<Integer>();
+	public Vector<String> dictionary = new Vector<>();
+	protected Vector<Integer> encryptionKey = new Vector<>();
+	public static int textSize;
 
 	public void generateKey() {
 		int quota = 0;
@@ -81,6 +82,7 @@ public class EncryptionService {
 		for (int i = 0; i < encryptionKey.size(); i++) {
 			encryptedSentence = encryptedSentence.replace((char) (i + 'a'), (char) (encryptionKey.get(i) + 'a'));
 		}
+		textSize = encryptedSentence.length();
 		return encryptedSentence;
 	}
 
@@ -92,7 +94,7 @@ public class EncryptionService {
 		this.text = text;
 	}
 
-	public static int randInt(int min, int max) {
+	private int randInt(int min, int max) {
 		return min + (int) (Math.random() * (max - min + 1));
 	}
 

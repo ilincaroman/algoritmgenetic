@@ -3,12 +3,12 @@ package models;
 import java.util.List;
 
 public class Candidate implements Comparable<Candidate> {
-	public Double fitnessScore;
-	public List<Integer> decryptionKey;
+	private Double fitnessScore;
+	private Double normalizedFitness;
+	private List<Integer> decryptionKey;
 
-	public Candidate(Double fitness, List<Integer> key) {
-		setFitness(fitness);
-		setKey(key);
+	public Candidate(List<Integer> key) {
+		decryptionKey = key;
 	}
 
 	public Double getFitness() {
@@ -29,7 +29,14 @@ public class Candidate implements Comparable<Candidate> {
 
 	@Override
 	public int compareTo(Candidate o) {
-		// TODO Auto-generated method stub
 		return fitnessScore > o.getFitness() ? -1 : fitnessScore < o.getFitness() ? 1 : 0;
+	}
+
+	public Double getNormalizedFitness() {
+		return normalizedFitness;
+	}
+
+	public void setNormalizedFitness(Double normalizedFitness) {
+		this.normalizedFitness = normalizedFitness;
 	}
 }

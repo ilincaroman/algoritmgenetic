@@ -3,44 +3,44 @@ package services;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Candidate;
+
 public class PopulationService {
-	private List<List<Integer>> population = new ArrayList<>();
+	public static final int POPULATION_SIZE = 100;
+	public List<Candidate> population = new ArrayList<>();
 
 	public List<Integer> generateKey() {
 		List<Integer> candidateKey = new ArrayList<>();
+		List<Integer> domain = new ArrayList<>();
 
-		int quota = 0;
-		while (quota != 26) {
-			int positionShift = randInt(0, 25);
-			if (candidateKey.contains(positionShift) == false) {
-				candidateKey.add(positionShift);
-				quota++;
-			}
+		for (int i = 0; i < 26; i++) {
+			domain.add(i);
 		}
+
+		while (domain.size() > 0) {
+			int position = randInt(0, domain.size() - 1);
+			candidateKey.add(domain.get(position));
+			domain.remove(position);
+		}
+
 		return candidateKey;
 	}
 
 	public void generateFirstPopulation() {
 		int quota = 0;
-		while (quota != 100) {
+		while (quota < POPULATION_SIZE) {
 			List<Integer> someKey = generateKey();
-			population.add(someKey);
+			Candidate subject = new Candidate(someKey);
+			population.add(subject);
 			quota++;
-		}
-		// checkin if generation is kewl
-		for (int i = 0; i < population.size(); i++) {
-			for (int j = 0; j < population.get(i).size(); j++) {
-				System.out.print(population.get(i).get(j) + " ");
-			}
-			System.out.println();
 		}
 	}
 
-	public void passToNextGeneration(List<List<Integer>> population) {
+	public void passToNextGeneration(List<Candidate> population) {
 		this.population = population;
 	}
 
-	public List<List<Integer>> getPopulation() {
+	public List<Candidate> getPopulation() {
 		return population;
 	}
 

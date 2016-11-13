@@ -1,5 +1,9 @@
 package services;
 
+import java.util.List;
+
+import models.Candidate;
+
 public class GeneticAlgorithm {
 	public void startAlgorithm() {
 		EncryptionService ES = new EncryptionService();
@@ -15,13 +19,34 @@ public class GeneticAlgorithm {
 		PS.generateFirstPopulation();
 
 		FitnessService FS = new FitnessService();
-		for (int i = 0; i < PS.population.size(); i++) {
-			FS.evaluateFitness(ES.dictionary, Encrypted, PS.population.get(i));
+		for (int i = 0; i < PS.getPopulation().size(); i++) {
+			FS.evaluateFitness(ES.dictionary, Encrypted, PS.getPopulation().get(i));
 		}
-		FS.sortPopulationByFitness();
-		// FS.printOrdered();
-		// System.out.println("MAXIM AM ZIS" + FS.getMaxFit());
-		// FS.normalizeFit();
-		FS.printOrdered();
+
+		FS.sortPopulationByFitness(PS.population);
+		FS.normalizeFit(PS.population);
+
+		for (Candidate c : PS.population) {
+			System.out.print(
+					"Fitness: " + c.getFitness() + " normalized to: " + c.getNormalizedFitness() + " for subject ");
+			for (Integer i : c.getKey()) {
+				System.out.print(i + " ");
+			}
+			System.out.println();
+		}
+
+		SelectionService SS = new SelectionService();
+		List<Candidate> newPop = SS.fortuneWheel(PS.population);
+		FS.sortPopulationByFitness(newPop);
+		System.out.println();
+
+		for (Candidate c : newPop) {
+			System.out.print(
+					"Fitness: " + c.getFitness() + " normalized to: " + c.getNormalizedFitness() + " for subject ");
+			for (Integer i : c.getKey()) {
+				System.out.print(i + " ");
+			}
+			System.out.println();
+		}
 	}
 }
